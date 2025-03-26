@@ -9,7 +9,7 @@ export default function Home() {
         <title>3D Stadium</title>
         <meta name="description" content="Interactive 3D Stadium" />
       </Head>
-       <StadiumScene />
+       <StadiumScene  />
         <ValetBookingForm/>
         </div>
 

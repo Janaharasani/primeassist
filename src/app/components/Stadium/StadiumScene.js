@@ -10,10 +10,14 @@ export default function StadiumScene() {
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: true,
+      alpha: true // For potential transparency
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     mountRef.current.appendChild(renderer.domElement);
     scene.background = new THREE.Color('#f9fafb');
+
     // Lighting
     const ambientLight = new THREE.AmbientLight(0x404040);
     scene.add(ambientLight);
@@ -21,7 +25,7 @@ export default function StadiumScene() {
     directionalLight.position.set(1, 1, 1);
     scene.add(directionalLight);
 
-    // Create stadium
+    // Create stadium (your existing code)
     const createStadium = () => {
       // Field
       const fieldGeometry = new THREE.CircleGeometry(10, 32);
@@ -79,15 +83,31 @@ export default function StadiumScene() {
     camera.position.set(0, 15, 20);
     camera.lookAt(0, 0, 0);
 
-    // Controls
+    // Enhanced OrbitControls configuration
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
+    
+    // Improved control settings
+    controls.enablePan = true; // Allow moving the camera sideways/up-down
+    controls.enableZoom = false; // Enable zoom with scroll/pinch
+    controls.zoomSpeed = 1.0; // Adjust zoom sensitivity
+    controls.rotateSpeed = 0.5; // Adjust rotation speed
+    controls.panSpeed = 0.5; // Adjust pan speed
+    controls.screenSpacePanning = true; // More intuitive panning
+    
+    // Set vertical rotation limits (optional)
+    controls.minPolarAngle = 0; // Minimum vertical angle (radians)
+    controls.maxPolarAngle = Math.PI * 0.9; // Maximum vertical angle
+    
+    // Set zoom limits
+    controls.minDistance = 10; // Minimum zoom distance
+    controls.maxDistance = 50; // Maximum zoom distance
 
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
-      controls.update();
+      controls.update(); // Required when damping is enabled
       renderer.render(scene, camera);
     };
     animate();
@@ -103,9 +123,21 @@ export default function StadiumScene() {
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
-      mountRef.current.removeChild(renderer.domElement);
+      if (mountRef.current && renderer.domElement) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
+      controls.dispose(); // Clean up controls
     };
   }, []);
 
-  return <div ref={mountRef} style={{ width: '100%', height: '100vh' }} />;
+  return (
+    <div 
+      ref={mountRef} 
+      style={{ 
+        width: '100%', 
+        height: '100vh',
+        touchAction: 'none' // Prevent browser touch gestures from interfering
+      }} 
+    />
+  );
 }
