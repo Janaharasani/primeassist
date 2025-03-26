@@ -150,15 +150,14 @@ const ValetParkingForm = () => {
                     </label>
                     <div className="relative">
                       <div className="flex items-center border border-gray-300 rounded-3xl  outline-none focus-within:ring-indigo-500 focus-within:border-indigo-500">
-                        <span className="pl-4 pr-2 text-gray-500">+92</span>
                         <input
                           type="tel"
                           id="phone"
                           name="phone"
                           value={formData.phone}
                           onChange={handleChange}
-                          className="w-full pr-4 py-3 border-none outline-none  rounded-3xl bg-transparent"
-                          placeholder="300 1234567"
+                          className="w-full pl-4 pr-4 py-3 border-none outline-none  rounded-3xl bg-transparent"
+                          placeholder="+92 300 1234567"
                           required
                         />
                         <FaPhone className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
