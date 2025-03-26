@@ -168,7 +168,7 @@ export default function StadiumScene() {
         width: '100%', 
         height: '100vh',
         touchAction: isMobile ? 'auto' : 'none',
-        overflow: isMobile ? 'auto' : 'hidden'
+        overflow: 'hidden',
       }} 
     />
   );
