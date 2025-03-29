@@ -92,7 +92,7 @@ const ValetParkingForm = () => {
         </div>
 
         <div className="   overflow-hidden">
-          <div className="p-8">
+          <div className=" px-2 py-8 md:px-8">
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Personal Information Section */}
               <div className="space-y-6">
@@ -412,7 +412,7 @@ const ValetParkingForm = () => {
                 </div>
               </div>
 
-              <div className="pt-4 flex justify-end">
+              <div className="pt-4 flex justify-start">
                             <button
                 type="submit"
                 disabled={isSubmitting}

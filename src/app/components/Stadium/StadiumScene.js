@@ -84,8 +84,8 @@ export default function StadiumScene() {
 
       // Lights (position scaled)
       const stadiumLights = new THREE.Group();
-      for (let i = 0; i < 8; i++) {
-        const angle = (i / 8) * Math.PI * 2;
+      for (let i = 0; i < 0; i++) {
+        const angle = (i / 0) * Math.PI * 2;
         const light = new THREE.PointLight(0xffffff, 1, 20 * scaleFactor);
         light.position.set(
           18 * scaleFactor * Math.cos(angle),
