@@ -12,6 +12,10 @@ export default function StadiumScene() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Store current ref value in a variable to avoid stale closure
+    const mountNode = mountRef.current;
+    if (!mountNode) return;
+
     // Check if mobile device
     const checkIfMobile = () => {
       return dimensions.width < 768;
@@ -26,7 +30,7 @@ export default function StadiumScene() {
       alpha: true
     });
     renderer.setSize(dimensions.width, dimensions.height);
-    mountRef.current.appendChild(renderer.domElement);
+    mountNode.appendChild(renderer.domElement);
     scene.background = new THREE.Color('#f9fafb');
 
     // Calculate scale factor based on screen size
@@ -131,8 +135,9 @@ export default function StadiumScene() {
     }
 
     // Animation loop
+    let animationFrameId;
     const animate = () => {
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
       if (controls) controls.update();
       renderer.render(scene, camera);
     };
@@ -154,10 +159,31 @@ export default function StadiumScene() {
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
+      cancelAnimationFrame(animationFrameId);
+      
+      if (mountNode && renderer.domElement) {
+        mountNode.removeChild(renderer.domElement);
       }
-      if (controls) controls.dispose();
+      
+      if (controls) {
+        controls.dispose();
+      }
+      
+      renderer.dispose();
+      
+      // Clean up all materials and geometries
+      scene.traverse(object => {
+        if (object instanceof THREE.Mesh) {
+          if (object.geometry) object.geometry.dispose();
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach(material => material.dispose());
+            } else {
+              object.material.dispose();
+            }
+          }
+        }
+      });
     };
   }, [dimensions, isMobile]);
 

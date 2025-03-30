@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { FaCarSide } from "react-icons/fa";
+import Image from "next/image";
 
 const OurStory = () => {
   return (
@@ -18,7 +19,7 @@ const OurStory = () => {
             </h2>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Founded in 2023, ValetPark emerged from a simple observation: premium parking 
-              shouldn't require premium effort. We've transformed urban parking through our 
+              shouldn&apos;t require premium effort. We&apos;ve transformed urban parking through our 
               proprietary AI dispatch system and concierge-trained attendants.
             </p>
             <div className="mt-10 space-y-6">
@@ -42,10 +43,12 @@ const OurStory = () => {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            <img
+            <Image
               src="/team.png"
               alt="Professional valet team"
               className="rounded-xl shadow-2xl aspect-[16/10] w-full object-cover"
+              width={800}  // Added required width
+              height={500} // Added required height
             />
             <div className="absolute -bottom-8 -right-8 bg-white p-6 rounded-lg shadow-lg w-3/4">
               <h3 className="text-lg font-semibold text-gray-900">Industry Recognition</h3>
