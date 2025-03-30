@@ -3,15 +3,7 @@ import Image from "next/image";
 const Hero = () => {
   return (
     <div className="relative overflow-hidden min-h-[250px] sm:min-h-[400px] md:min-h-[420px] lg:min-h-[500px] xl:min-h-[500px] ">
-      <div className="absolute inset-0 -z-10">
-          <Image
-            src={"/hero-background.png"}
-            alt="career-counseling Hero"
-            width={1920}
-            height={1080}
-            className="h-full w-full object-cover hidden sm:block"
-          />
-        </div>
+     
       {/* Content Overlay */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-50 text-center sm:px-4">
         <div className="relative top-12 md:top-6 w-[80%] sm:w-[80%] md:w-[70%] lg:w-[64%] xl:w-[60%]">

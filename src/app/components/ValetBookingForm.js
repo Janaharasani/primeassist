@@ -7,8 +7,8 @@ import { ref, push } from 'firebase/database';
 
 const ValetParkingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-   const [submitError, setSubmitError] = useState('');
-   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,7 +22,8 @@ const ValetParkingForm = () => {
     endTime: '',
     specialInstructions: '',
     paymentMethod: 'cash',
-    company: ''
+    company: '',
+    status: 'pending' // Added status field
   });
 
   const handleChange = (e) => {
@@ -30,6 +31,13 @@ const ValetParkingForm = () => {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleStatusChange = (status) => {
+    setFormData(prev => ({
+      ...prev,
+      status
     }));
   };
 
@@ -63,7 +71,8 @@ const ValetParkingForm = () => {
         endTime: '',
         specialInstructions: '',
         paymentMethod: 'cash',
-        company: ''
+        company: '',
+        status: 'pending'
       });
   
       setSubmitSuccess(true);
@@ -74,8 +83,9 @@ const ValetParkingForm = () => {
       setIsSubmitting(false);
     }
   };
+
   return (
-    <div className="min-h-screen  bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-24 px-4 sm:px-6 lg:px-8">
       <div className="w-[90%] mx-auto">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center mb-4">
@@ -91,8 +101,8 @@ const ValetParkingForm = () => {
           </p>
         </div>
 
-        <div className="   overflow-hidden">
-          <div className=" px-2 py-8 md:px-8">
+        <div className="overflow-hidden">
+          <div className="px-2 py-8 md:px-8">
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Personal Information Section */}
               <div className="space-y-6">
@@ -149,14 +159,14 @@ const ValetParkingForm = () => {
                       Phone Number
                     </label>
                     <div className="relative">
-                      <div className="flex items-center border border-gray-300 rounded-3xl  outline-none focus-within:ring-indigo-500 focus-within:border-indigo-500">
+                      <div className="flex items-center border border-gray-300 rounded-3xl outline-none focus-within:ring-indigo-500 focus-within:border-indigo-500">
                         <input
                           type="tel"
                           id="phone"
                           name="phone"
                           value={formData.phone}
                           onChange={handleChange}
-                          className="w-full pl-4 pr-4 py-3 border-none outline-none  rounded-3xl bg-transparent"
+                          className="w-full pl-4 pr-4 py-3 border-none outline-none rounded-3xl bg-transparent"
                           placeholder="+92 300 1234567"
                           required
                         />
@@ -178,7 +188,6 @@ const ValetParkingForm = () => {
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-3xl outline-none focus:ring-indigo-500 focus:border-indigo-500 transition"
                         placeholder="Your company"
-                        required
                       />
                       <MdBusiness className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     </div>
@@ -332,6 +341,48 @@ const ValetParkingForm = () => {
                 </div>
               </div>
 
+              {/* Status Section */}
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <FaLock className="text-indigo-600" />
+                  </div>
+                  <h2 className="text-2xl font-semibold text-gray-800">
+                    Booking Status:
+                  </h2>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <label className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="status"
+                      checked={formData.status === 'pending'}
+                      onChange={() => handleStatusChange('pending')}
+                      className="h-5 w-5 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <div className="flex flex-col">
+                      <span className="block text-sm font-medium text-gray-700">Pending</span>
+                      <span className="block text-xs text-gray-500">Booking is awaiting confirmation</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="status"
+                      checked={formData.status === 'completed'}
+                      onChange={() => handleStatusChange('completed')}
+                      className="h-5 w-5 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <div className="flex flex-col">
+                      <span className="block text-sm font-medium text-gray-700">Completed</span>
+                      <span className="block text-xs text-gray-500">Booking has been fulfilled</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
               {/* Additional Information Section */}
               <div className="space-y-6">
                 <div className="flex items-center space-x-3">
@@ -412,38 +463,37 @@ const ValetParkingForm = () => {
                 </div>
               </div>
 
-              <div className="pt-4 flex justify-start">
-                            <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`px-12  bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 rounded-4xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 shadow-md hover:shadow-lg ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Processing...
-                  </span>
-                ) : (
-                  'Book Valet Parking'
-                )}
-              </button>
-                   
+              <div className="pt-4 flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`px-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 rounded-4xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 shadow-md hover:shadow-lg ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : (
+                    'Book Valet Parking'
+                  )}
+                </button>
               </div>
               {submitError && (
-              <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
-                {submitError}
-              </div>
-            )}
+                <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                  {submitError}
+                </div>
+              )}
 
-            {submitSuccess && (
-              <div className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
-                Booking submitted successfully!
-              </div>
-            )}
-             </form>
+              {submitSuccess && (
+                <div className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
+                  Booking submitted successfully!
+                </div>
+              )}
+            </form>
           </div>
         </div>
       </div>
