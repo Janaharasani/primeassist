@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FaSync, FaSearch, FaFilter, FaEnvelope, FaPhone, FaCar, FaUser, FaMoneyBill, FaMobile, FaTimes, FaCheck, FaEdit } from 'react-icons/fa';
+import { FaSync, FaSearch, FaFilter, FaEnvelope, FaPhone, FaCar, FaUser, FaMoneyBill, FaMobile, FaTimes, FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, remove, update } from 'firebase/database';
-import  Footer from "../components/Footer";
+import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import LayoutXPadding from "../components/LayoutXPadding"
 
@@ -44,6 +44,7 @@ export default function Admin() {
     status: 'upcoming' // Added status to edit form
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+  const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
 
   useEffect(() => {
     const bookingsRef = ref(database, 'bookings');
@@ -128,6 +129,49 @@ export default function Admin() {
       });
   };
 
+  const handleClearAll = () => {
+    const bookingsRef = ref(database, 'bookings');
+    remove(bookingsRef)
+      .then(() => {
+        setShowClearAllConfirm(false);
+      })
+      .catch((error) => {
+        console.error("Error clearing all bookings: ", error);
+      });
+  };
+
+  // Function to clear old bookings (older than one week)
+  const clearOldBookings = () => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    
+    const oldBookings = bookings.filter(booking => {
+      const bookingDate = new Date(booking.timestamp);
+      return bookingDate < oneWeekAgo;
+    });
+
+    if (oldBookings.length === 0) {
+      alert('No bookings older than one week found.');
+      return;
+    }
+
+    if (window.confirm(`Are you sure you want to delete ${oldBookings.length} bookings older than one week?`)) {
+      const deletePromises = oldBookings.map(booking => {
+        const bookingRef = ref(database, `bookings/${booking.id}`);
+        return remove(bookingRef);
+      });
+
+      Promise.all(deletePromises)
+        .then(() => {
+          alert(`Successfully deleted ${oldBookings.length} old bookings.`);
+        })
+        .catch(error => {
+          console.error("Error deleting old bookings: ", error);
+          alert('An error occurred while deleting old bookings.');
+        });
+    }
+  };
+
   const filteredBookings = bookings.filter(booking => {
     // Search filter - now only by name
     const matchesSearch = booking.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -207,6 +251,49 @@ export default function Admin() {
               </p>
           </div>
         </div>
+
+        {/* Database Management Buttons */}
+        <div className="flex justify-end gap-4 mb-4">
+          <button 
+            onClick={clearOldBookings}
+            className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 text-sm flex items-center"
+          >
+            <FaTrash className="mr-2" />
+            Clear Old Bookings (1+ week)
+          </button>
+          <button 
+            onClick={() => setShowClearAllConfirm(true)}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm flex items-center"
+            disabled={bookings.length === 0}
+          >
+            <FaTrash className="mr-2" />
+            Clear All Bookings
+          </button>
+        </div>
+
+        {/* Clear All Confirmation Modal */}
+        {showClearAllConfirm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg max-w-md w-full">
+              <h3 className="text-lg font-medium mb-4">Confirm Clear All Bookings</h3>
+              <p className="mb-4">Are you sure you want to delete ALL {bookings.length} bookings? This action cannot be undone.</p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowClearAllConfirm(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleClearAll}
+                  className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                >
+                  Delete All
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-md overflow-hidden mb-6">
