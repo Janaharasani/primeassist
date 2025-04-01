@@ -32,8 +32,9 @@ export default function Home() {
 
         <Hero/>
       </div>
-       
+       <div className="hidden sm:block">
        <StadiumScene  />
+       </div>
        <OurStory/>
         <Testimonials/>
         <Footer/>

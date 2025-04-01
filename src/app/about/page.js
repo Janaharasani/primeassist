@@ -43,7 +43,7 @@ export default function AboutPage() {
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Redefining Parking Excellence
             </h1>
-            <p className="mt-6 text-xl text-center mx-auto">
+            <p className="mt-6 text-xs  sm:text-xl text-center mx-auto">
               Where cutting-edge technology meets luxury valet service for the modern driver.
             </p>
           

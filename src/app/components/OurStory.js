@@ -6,7 +6,7 @@ import Image from "next/image";
 const OurStory = () => {
   return (
     <section className="py-12 sm:py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 ">
+      <div className="max-w-[95%] mx-auto px-6 lg:px-8 ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -50,7 +50,7 @@ const OurStory = () => {
               width={800}  // Added required width
               height={500} // Added required height
             />
-            <div className="absolute -bottom-8 -right-8 bg-white p-6 rounded-lg shadow-lg w-3/4">
+            <div className="hidden sm:block absolute -bottom-8 -right-8 bg-white p-6 rounded-lg shadow-lg w-3/4">
               <h3 className="text-lg font-semibold text-gray-900">Industry Recognition</h3>
               <p className="mt-2 text-gray-600">
                 2024 Parking Innovation Award winner for AI integration

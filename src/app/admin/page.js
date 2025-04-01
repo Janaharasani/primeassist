@@ -202,7 +202,7 @@ export default function Admin() {
             <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
                 Manage All Bookings
               </h1>
-              <p className="mt-3 text-base w-[60%] text-gray-600  mx-auto">
+              <p className="mt-3 text-xs  sm:text-base w-[80%] sm:w-[60%] text-gray-600  mx-auto">
                 Easily view and manage your valet parking reservations with our seamless booking system.
               </p>
           </div>
