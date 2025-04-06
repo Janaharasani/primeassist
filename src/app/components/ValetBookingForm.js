@@ -95,8 +95,8 @@ const ValetParkingForm = () => {
       <div className="w-[90%] mx-auto">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center">
-              <FaCar className="text-3xl text-indigo-600" />
+            <div className="w-16 h-16 rounded-full bg-indigo-500/20  flex items-center justify-center">
+              <FaCar className="text-3xl text-indigo-300" />
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white sm:text-4xl">

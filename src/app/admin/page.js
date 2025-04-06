@@ -189,7 +189,7 @@ export default function Admin() {
   const getStatusBadge = (status) => {
     const statusClasses = {
       completed: 'bg-green-700 text-blue-100',
-      pending: 'bg-red-700 text-gray-100' // Added for manual status
+      pending: 'bg-red-400 text-gray-100' // Added for manual status
     };
     
     return (
@@ -442,7 +442,7 @@ export default function Admin() {
                               />
                             </div>
                             <div className="text-xs text-gray-500 mt-1">
-                              Company: 
+                              Persons: 
                               <input
                                 type="text"
                                 name="company"
@@ -568,7 +568,7 @@ export default function Admin() {
                             </div>
                             {booking.company && (
                               <div className="text-xs text-gray-400 mt-1">
-                                Company: {booking.company}
+                                persons: {booking.company}
                               </div>
                             )}
                           </td>
@@ -649,6 +649,15 @@ export default function Admin() {
             Last updated: {new Date().toLocaleTimeString()}
           </div>
         </div>
+        <div className="pt-4 flex justify-end mx-10 my-8 ">
+              <button
+                type="button"
+                onClick={() => window.history.back()}
+                className="px-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 rounded-4xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 shadow-md hover:shadow-lg"
+              >
+                ← Back to Home
+              </button>
+         </div>
       </div>
     </div>
   );
