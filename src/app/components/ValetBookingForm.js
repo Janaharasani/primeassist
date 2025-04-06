@@ -84,8 +84,14 @@ const ValetParkingForm = () => {
     }
   };
 
+
+
   return (
-    <div className="min-h-screen bg-gray-50 py-24 px-4 sm:px-6 lg:px-8">
+
+    <div
+    style={{ backgroundColor: '#000F2B' }}
+    className="min-h-screen py-24 px-4 sm:px-6 lg:px-8 text-white"
+  >
       <div className="w-[90%] mx-auto">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center mb-4">
@@ -93,10 +99,10 @@ const ValetParkingForm = () => {
               <FaCar className="text-3xl text-indigo-600" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl font-bold text-white sm:text-4xl">
             Valet Parking Booking
           </h1>
-          <p className="mt-3 text-lg text-gray-600 max-w-md mx-auto">
+          <p className="mt-3 text-lg text-white max-w-md mx-auto">
             Reserve your spot with our premium valet service in just a few clicks
           </p>
         </div>
@@ -110,14 +116,14 @@ const ValetParkingForm = () => {
                   <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                     <FaUser className="text-indigo-600" />
                   </div>
-                  <h2 className="text-2xl font-semibold text-gray-800">
+                  <h2 className="text-2xl font-semibold text-white">
                     Personal Information:
                   </h2>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="relative">
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="name" className="block text-sm font-medium text-blue-200 mb-1">
                       Full Name
                     </label>
                     <div className="relative">
@@ -136,7 +142,7 @@ const ValetParkingForm = () => {
                   </div>
 
                   <div className="relative">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="email" className="block text-sm font-medium text-blue-200 mb-1">
                       Email Address
                     </label>
                     <div className="relative">
@@ -155,7 +161,7 @@ const ValetParkingForm = () => {
                   </div>
 
                   <div className="relative">
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="phone" className="block text-sm font-medium text-blue-200  mb-1">
                       Phone Number
                     </label>
                     <div className="relative">
@@ -167,7 +173,7 @@ const ValetParkingForm = () => {
                           value={formData.phone}
                           onChange={handleChange}
                           className="w-full pl-4 pr-4 py-3 border-none outline-none rounded-3xl bg-transparent"
-                          placeholder="+92 300 1234567"
+                          placeholder="+966 12 345 6789"
                           required
                         />
                         <FaPhone className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -176,8 +182,8 @@ const ValetParkingForm = () => {
                   </div>
 
                   <div className="relative">
-                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-                      Company Name
+                    <label htmlFor="company" className="block text-sm font-medium text-blue-200 mb-1">
+                      Number of Persons
                     </label>
                     <div className="relative">
                       <input
@@ -187,7 +193,7 @@ const ValetParkingForm = () => {
                         value={formData.company}
                         onChange={handleChange}
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-3xl outline-none focus:ring-indigo-500 focus:border-indigo-500 transition"
-                        placeholder="Your company"
+                        placeholder="Number of Persons"
                       />
                       <MdBusiness className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     </div>
@@ -201,14 +207,14 @@ const ValetParkingForm = () => {
                   <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                     <FaCar className="text-indigo-600" />
                   </div>
-                  <h2 className="text-2xl font-semibold text-gray-800">
+                  <h2 className="text-2xl font-semibold text-white">
                     Vehicle Information:
                   </h2>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="vehicleMake" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="vehicleMake" className="block text-sm font-medium text-blue-200 mb-1">
                       Vehicle Make
                     </label>
                     <input
@@ -224,7 +230,7 @@ const ValetParkingForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="vehicleModel" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="vehicleModel" className="block text-sm font-medium text-blue-200 mb-1">
                       Vehicle Model
                     </label>
                     <input
@@ -240,7 +246,7 @@ const ValetParkingForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="vehicleColor" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="vehicleColor" className="block text-sm font-medium text-blue-200 mb-1">
                       Vehicle Color
                     </label>
                     <input
@@ -256,7 +262,7 @@ const ValetParkingForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="licensePlate" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="licensePlate" className="block text-sm font-medium text-blue-200 mb-1">
                       License Plate
                     </label>
                     <input
@@ -279,14 +285,14 @@ const ValetParkingForm = () => {
                   <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                     <FaClock className="text-indigo-600" />
                   </div>
-                  <h2 className="text-2xl font-semibold text-gray-800">
+                  <h2 className="text-2xl font-semibold text-white">
                     Parking Details:
                   </h2>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div className="relative">
-                    <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="date" className="block text-sm font-medium text-blue-200 mb-1">
                       Date
                     </label>
                     <div className="relative">
@@ -304,7 +310,7 @@ const ValetParkingForm = () => {
                   </div>
 
                   <div className="relative">
-                    <label htmlFor="startTime" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="startTime" className="block text-sm font-medium text-blue-200 mb-1">
                       Start Time
                     </label>
                     <div className="relative">
@@ -322,7 +328,7 @@ const ValetParkingForm = () => {
                   </div>
 
                   <div className="relative">
-                    <label htmlFor="endTime" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="endTime" className="block text-sm font-medium text-blue-200  mb-1">
                       End Time
                     </label>
                     <div className="relative">
@@ -347,13 +353,13 @@ const ValetParkingForm = () => {
                   <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                     <FaLock className="text-indigo-600" />
                   </div>
-                  <h2 className="text-2xl font-semibold text-gray-800">
+                  <h2 className="text-2xl font-semibold text-white">
                     Booking Status:
                   </h2>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <label className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
+                  <label className="flex items-center space-x-3   p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
                     <input
                       type="radio"
                       name="status"
@@ -362,12 +368,12 @@ const ValetParkingForm = () => {
                       className="h-5 w-5 text-indigo-600 focus:ring-indigo-500"
                     />
                     <div className="flex flex-col">
-                      <span className="block text-sm font-medium text-gray-700">Pending</span>
-                      <span className="block text-xs text-gray-500">Booking is awaiting confirmation</span>
+                      <span className="block text-sm font-medium text-white ">Pending</span>
+                      <span className="block text-xs text-white ">Booking is awaiting confirmation</span>
                     </div>
                   </label>
 
-                  <label className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
+                  <label className="flex items-center space-x-3   p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
                     <input
                       type="radio"
                       name="status"
@@ -376,8 +382,8 @@ const ValetParkingForm = () => {
                       className="h-5 w-5 text-indigo-600 focus:ring-indigo-500"
                     />
                     <div className="flex flex-col">
-                      <span className="block text-sm font-medium text-gray-700">Completed</span>
-                      <span className="block text-xs text-gray-500">Booking has been fulfilled</span>
+                      <span className="block text-sm font-medium text-white ">Completed</span>
+                      <span className="block text-xs text-white ">Booking has been fulfilled</span>
                     </div>
                   </label>
                 </div>
@@ -389,13 +395,13 @@ const ValetParkingForm = () => {
                   <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                     <FaInfoCircle className="text-indigo-600" />
                   </div>
-                  <h2 className="text-2xl font-semibold text-gray-800">
+                  <h2 className="text-2xl font-semibold text-white">
                     Additional Information:
                   </h2>
                 </div>
                 
                 <div>
-                  <label htmlFor="specialInstructions" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="specialInstructions" className="block text-sm font-medium text-blue-200  mb-1">
                     Special Instructions
                   </label>
                   <textarea
@@ -410,11 +416,11 @@ const ValetParkingForm = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-medium text-blue-200  mb-3">
                     Payment Method
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <label className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
+                    <label className="flex items-center space-x-3  p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
                       <input
                         type="radio"
                         name="paymentMethod"
@@ -424,11 +430,11 @@ const ValetParkingForm = () => {
                         className="h-5 w-5 text-indigo-600 focus:ring-indigo-500"
                       />
                       <div className="flex items-center">
-                        <span className="block text-sm font-medium text-gray-700">Cash</span>
+                        <span className="block text-sm font-medium text-white">Cash</span>
                       </div>
                     </label>
 
-                    <label className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
+                    <label className="flex items-center space-x-3   p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
                       <input
                         type="radio"
                         name="paymentMethod"
@@ -439,11 +445,11 @@ const ValetParkingForm = () => {
                       />
                       <div className="flex items-center">
                         <FaCreditCard className="text-gray-500 mr-2" />
-                        <span className="block text-sm font-medium text-gray-700">Credit Card</span>
+                        <span className="block text-sm font-medium text-white ">Credit Card</span>
                       </div>
                     </label>
 
-                    <label className="flex items-center space-x-3 bg-gray-50 p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
+                    <label className="flex items-center space-x-3  p-4 rounded-3xl border border-gray-200 hover:border-indigo-400 cursor-pointer">
                       <input
                         type="radio"
                         name="paymentMethod"
@@ -456,14 +462,26 @@ const ValetParkingForm = () => {
                         <svg className="h-5 w-5 text-gray-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm3 14a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                         </svg>
-                        <span className="block text-sm font-medium text-gray-700">Mobile Payment</span>
+                        <span className="block text-sm font-medium text-white ">Mobile Payment</span>
                       </div>
                     </label>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 flex justify-end">
+              <div className="pt-4 flex justify-end space-x-4">
+              
+
+                <button
+                  type="button"
+                  onClick={() => window.history.back()}
+                  className="px-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 rounded-4xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 shadow-md hover:shadow-lg"
+                >
+                  ← Back to Home
+                </button>
+                
+                
+
                 <button
                   type="submit"
                   disabled={isSubmitting}

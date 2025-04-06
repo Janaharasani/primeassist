@@ -11,18 +11,8 @@ export default function Home() {
 
 
   return (
-       <div>
-        <LayoutXPadding>
-          <div className="relative top-6">
-            <Navbar />
-          </div>
-        </LayoutXPadding>
 
-        <ValetBookingForm/>
-        <Footer/>
-        </div>
-
-    
+     <ValetBookingForm/>
   );
 }
 
