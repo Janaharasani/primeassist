@@ -118,6 +118,15 @@ export default function Admin() {
       });
   };
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "https://primeassistsa.nexetron.com/home/";
+    }
+  };
+
+
   const handleDelete = (id) => {
     const bookingRef = ref(database, `bookings/${id}`);
     remove(bookingRef)
@@ -191,9 +200,12 @@ export default function Admin() {
       completed: 'bg-green-700 text-blue-100',
       pending: 'bg-red-400 text-gray-100' // Added for manual status
     };
+
+  
     
     return (
       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${statusClasses[status] || ''}`}>
+
         {status}
       </span>
     );
@@ -205,6 +217,7 @@ export default function Admin() {
       credit: 'bg-purple-300 text-purple-800',
       mobile: 'bg-indigo-300 text-indigo-800'
     };
+
     
     return (
       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${methodClasses[method] || 'bg-gray-300 text-gray-400'}`}>
@@ -652,7 +665,7 @@ export default function Admin() {
         <div className="pt-4 flex justify-end mx-10 my-8 ">
               <button
                 type="button"
-                onClick={() => window.history.back()}
+                onClick={handleBack}
                 className="px-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 rounded-4xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 shadow-md hover:shadow-lg"
               >
                 ← Back to Home
