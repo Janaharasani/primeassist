@@ -329,7 +329,7 @@ const ValetParkingForm = () => {
                         name="startTime"
                         value={formData.startTime}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-3xl outline-none focus:ring-indigo-500 focus:border-indigo-500 transition"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-3xl outline-none focus:ring-indigo-500 focus:border-indigo-500 transition "
                         required
                       />
                       <FaClock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -478,13 +478,13 @@ const ValetParkingForm = () => {
                 </div>
               </div>
 
-              <div className="pt-4 flex justify-end space-x-4">
+              <div className="pt-4 flex flex-row  max-sm:flex-col  justify-end space-x-4  max-sm:space-y-4">
               
 
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="px-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 rounded-4xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 shadow-md hover:shadow-lg"
+                  className="px-14 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 rounded-4xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 shadow-md hover:shadow-lg"
                 >
                   ← Back to Home
                 </button>
