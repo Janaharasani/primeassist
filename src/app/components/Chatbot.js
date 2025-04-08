@@ -32,16 +32,32 @@ export default function Chatbot() {
       });
 
       const data = await res.json();
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.response.content }]);
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      if (data.response?.content) {
+        setMessages((prev) => [...prev, { 
+          role: 'assistant', 
+          content: data.response.content 
+        }]);
+      } else {
+        throw new Error('Invalid response from server');
+      }
     } catch (error) {
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Sorry, something went wrong!' }]);
+      console.error('Chat error:', error);
+      setMessages((prev) => [...prev, { 
+        role: 'assistant', 
+        content: error.message || 'Sorry, something went wrong!' 
+      }]);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="bg-[#000F2B] text-white h-auto flex flex-col">
+    <div className="bg-[#000F2B] text-white h-full flex flex-col">
       <div className="max-w-2xl w-full mx-auto flex-1 flex flex-col">
         <div className="text-center py-6">
           <RiRobot2Line className="text-5xl mx-auto text-purple-400" />
@@ -89,5 +105,6 @@ export default function Chatbot() {
     </div>
   );
 }
+
 
 
