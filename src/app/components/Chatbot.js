@@ -14,6 +14,14 @@ export default function Chatbot() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+  
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "https://primeassistsa.nexetron.com/home/";
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -107,6 +115,15 @@ export default function Chatbot() {
           </button>
         </form>
       </div>
+      <div className="pt-4 flex justify-end mx-10 my-8 ">
+              <button
+                type="button"
+                onClick={handleBack}
+                className="px-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 rounded-4xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2 shadow-md hover:shadow-lg"
+              >
+                ← Back to Home
+              </button>
+         </div>
     </div>
     </div>
   );
