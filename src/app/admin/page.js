@@ -4,9 +4,7 @@ import { useState, useEffect } from 'react';
 import { FaSync, FaSearch, FaFilter, FaEnvelope, FaPhone, FaCar, FaUser, FaMoneyBill, FaMobile, FaTimes, FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, remove, update } from 'firebase/database';
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
-import LayoutXPadding from "../components/LayoutXPadding"
+
 
 // Initialize Firebase with your config
 const firebaseConfig = {
