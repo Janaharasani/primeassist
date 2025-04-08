@@ -54,10 +54,11 @@ export default function Chatbot() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="bg-[#000F2B] text-white h-full flex flex-col">
+    <div className='bg-[#000F2B]' >
+   <div className="bg-[#000F2B] text-white h-full flex flex-col min-h-screen">
       <div className="max-w-2xl w-full mx-auto flex-1 flex flex-col">
         <div className="text-center py-6">
           <RiRobot2Line className="text-5xl mx-auto text-purple-400" />
@@ -74,16 +75,20 @@ export default function Chatbot() {
                 </div>
               </div>
               <div className={`max-w-[70%] p-3 rounded-lg ${msg.role === 'user' ? 'bg-purple-700' : 'bg-purple-900'}`}>
-                {msg.content}
+                {msg.content.split('\n').map((line, i) => (
+                  <p key={i} className="text-lg whitespace-pre-wrap">{line}</p>
+                ))}
               </div>
             </div>
           ))}
           {loading && (
-            <div className="flex items-center justify-start my-4 gap-2">
-              <div className="rounded-full p-2 bg-purple-600 animate-pulse">
+            <div className="flex items-center justify-start my-4 gap-2 animate-pulse">
+              <div className="rounded-full p-2 bg-purple-600">
                 <RiRobot2Line />
               </div>
-              <div className="max-w-[70%] p-3 bg-purple-900 rounded-lg animate-pulse">Typing...</div>
+              <div className="max-w-[70%] p-3 bg-purple-900 rounded-lg">
+                <p>Typing...</p>
+              </div>
             </div>
           )}
           <div ref={messagesEndRef} />
@@ -103,8 +108,10 @@ export default function Chatbot() {
         </form>
       </div>
     </div>
+    </div>
   );
 }
+
 
 
 
