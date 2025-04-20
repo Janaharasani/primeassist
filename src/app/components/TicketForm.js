@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { 
-  FaTicketAlt, 
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  FaTicketAlt,
   FaSearch,
   FaCheckCircle,
   FaExclamationCircle,
@@ -10,46 +10,61 @@ import {
   FaCalendarAlt,
   FaDoorOpen,
   FaLayerGroup,
-  FaChair
-} from "react-icons/fa"
-import Image from "next/image"
+  FaChair,
+  FaDirections,
+} from "react-icons/fa";
+import Image from "next/image";
+import SeatGuide from "./SeatGuide";
 
 const TicketForm = () => {
-  const [ticketNumber, setTicketNumber] = useState("")
-  const [validationResult, setValidationResult] = useState(null)
-  const [isValid, setIsValid] = useState(false)
-  const [ticketDetails, setTicketDetails] = useState(null)
-  const [isValidating, setIsValidating] = useState(false)
+  const [ticketNumber, setTicketNumber] = useState("");
+  const [validationResult, setValidationResult] = useState(null);
+  const [isValid, setIsValid] = useState(false);
+  const [ticketDetails, setTicketDetails] = useState(null);
+  const [isValidating, setIsValidating] = useState(false);
+  const [showSeatGuide, setShowSeatGuide] = useState(false);
 
   const validateTicket = (ticket) => {
     // Regular expression for the ticket format
-    const ticketRegex = /^([NSWE]\d)-([SBFC])-([A-Z]{3})-(\d{6})-(\d{2})-([A-Z]\d{2})-(\d)-(\d{2})-(\d{2})$/
+    const ticketRegex =
+      /^([NSWE]\d)-([SBFC])-([A-Z]{3})-(\d{6})-(\d{2})-([A-Z]\d{2})-(\d)-(\d{2})-(\d{2})$/;
 
     // Check if the ticket matches the format
-    const match = ticket.match(ticketRegex)
+    const match = ticket.match(ticketRegex);
 
     if (!match) {
       return {
         isValid: false,
         message: "Invalid ticket format. Please check your ticket number.",
         details: null,
-      }
+      };
     }
 
     // Extract ticket components
-    const [_, parkingZone, eventType, venueCode, eventDate, gateNumber, zone, level, rowNumber, columnNumber] = match
+    const [
+      _,
+      parkingZone,
+      eventType,
+      venueCode,
+      eventDate,
+      gateNumber,
+      zone,
+      level,
+      rowNumber,
+      columnNumber,
+    ] = match;
 
     // Validate date format (DDMMYY)
-    const day = Number.parseInt(eventDate.substring(0, 2))
-    const month = Number.parseInt(eventDate.substring(2, 4))
-    const year = Number.parseInt(eventDate.substring(4, 6))
+    const day = Number.parseInt(eventDate.substring(0, 2));
+    const month = Number.parseInt(eventDate.substring(2, 4));
+    const year = Number.parseInt(eventDate.substring(4, 6));
 
     if (day < 1 || day > 31 || month < 1 || month > 12) {
       return {
         isValid: false,
         message: "Invalid date in ticket number.",
         details: null,
-      }
+      };
     }
 
     // Map event types to full names
@@ -61,7 +76,7 @@ const TicketForm = () => {
       H: "Hockey",
       T: "Tennis",
       P: "Performance",
-    }
+    };
 
     // Map venue codes to full names
     const venues = {
@@ -71,10 +86,10 @@ const TicketForm = () => {
       LAL: "Los Angeles Lakers Arena",
       BOS: "Boston Garden",
       CHI: "Chicago Stadium",
-    }
+    };
 
     // Format date for display
-    const formattedDate = `${day}/${month}/20${year}`
+    const formattedDate = `${day}/${month}/20${year}`;
 
     // Create ticket details object
     const details = {
@@ -87,25 +102,42 @@ const TicketForm = () => {
       level,
       rowNumber,
       columnNumber,
-    }
+    };
 
     return {
       isValid: true,
       message: "Valid ticket! You can proceed to the venue.",
       details,
-    }
-  }
+    };
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    setIsValidating(true)
+    e.preventDefault();
+    setIsValidating(true);
     setTimeout(() => {
-      const result = validateTicket(ticketNumber)
-      setValidationResult(result.message)
-      setIsValid(result.isValid)
-      setTicketDetails(result.details)
-      setIsValidating(false)
-    }, 800)
+      const result = validateTicket(ticketNumber);
+      setValidationResult(result.message);
+      setIsValid(result.isValid);
+      setTicketDetails(result.details);
+      setIsValidating(false);
+    }, 800);
+  };
+
+  // Reset ticket form and go back to validation
+  const handleResetSeatGuide = () => {
+    setShowSeatGuide(false);
+  };
+
+  // Start the seat guide process
+  const handleStartGuide = () => {
+    setShowSeatGuide(true);
+  };
+
+  // If showing seat guide, render SeatGuide component
+  if (showSeatGuide && ticketDetails) {
+    return (
+      <SeatGuide ticketDetails={ticketDetails} onReset={handleResetSeatGuide} />
+    );
   }
 
   return (
@@ -128,9 +160,7 @@ const TicketForm = () => {
               />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">
-                PrimeAssista
-              </h2>
+              <h2 className="text-2xl font-bold text-white">PrimeAssista</h2>
               <p className="text-xs text-white/60">Your Match Day Companion</p>
             </div>
           </div>
@@ -169,9 +199,10 @@ const TicketForm = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className={`w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-medium transition-all duration-200
-                ${isValidating || !ticketNumber
-                  ? "bg-white/10 cursor-not-allowed text-white/60"
-                  : " cursor-pointer  bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
+                ${
+                  isValidating || !ticketNumber
+                    ? "bg-white/10 cursor-not-allowed text-white/60"
+                    : " cursor-pointer  bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
                 }`}
             >
               {isValidating ? (
@@ -205,10 +236,32 @@ const TicketForm = () => {
                 ) : (
                   <FaExclamationCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
                 )}
-                <p className={`font-medium ${isValid ? "text-white" : "text-red-400"}`}>
+                <p
+                  className={`font-medium ${
+                    isValid ? "text-white" : "text-red-400"
+                  }`}
+                >
                   {validationResult}
                 </p>
               </div>
+            </motion.div>
+          )}
+
+          {/* Find My Seat Button */}
+          {isValid && ticketDetails && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="mt-4"
+            >
+              <button
+                onClick={handleStartGuide}
+                className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-medium transition-all duration-200 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white shadow-lg"
+              >
+                <FaDirections className="h-5 w-5" />
+                <span>Find My Seat</span>
+              </button>
             </motion.div>
           )}
 
@@ -221,7 +274,9 @@ const TicketForm = () => {
               className="mt-6 rounded-xl border border-white/10 overflow-hidden"
             >
               <div className="p-4 border-b border-white/10">
-                <h3 className="font-medium text-white/90">Ticket Information</h3>
+                <h3 className="font-medium text-white/90">
+                  Ticket Information
+                </h3>
               </div>
 
               <div className="p-4 space-y-4">
@@ -248,14 +303,12 @@ const TicketForm = () => {
                   />
                 </div>
 
-                <div className="pt-4 border-t border-white/10">
-                  <h4 className="text-sm font-medium text-white/60 mb-3">
-                    Seating Details
-                  </h4>
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="pt-2 border-t border-white/10">
+                  <h4 className="text-sm text-white/60 mb-2">Seating</h4>
+                  <div className="grid grid-cols-3 gap-3">
                     <DetailItem
                       icon={<FaLayerGroup />}
-                      label="Zone"
+                      label="Section"
                       value={ticketDetails.zone}
                     />
                     <DetailItem
@@ -265,52 +318,28 @@ const TicketForm = () => {
                     />
                     <DetailItem
                       icon={<FaChair />}
-                      label="Row"
-                      value={ticketDetails.rowNumber}
-                    />
-                    <DetailItem
-                      icon={<FaChair />}
                       label="Seat"
-                      value={ticketDetails.columnNumber}
+                      value={`${ticketDetails.rowNumber}-${ticketDetails.columnNumber}`}
                     />
                   </div>
                 </div>
               </div>
-
-              <div className="p-4 bg-white/5 border-t border-white/10">
-                <div className="flex items-center gap-2">
-                  <FaMapMarkerAlt className="h-4 w-4 text-white/60" />
-                  <span className="text-sm text-white/60">Parking Zone:</span>
-                  <span className="text-sm font-medium text-white">
-                    {ticketDetails.parkingZone}
-                  </span>
-                </div>
-              </div>
             </motion.div>
           )}
-
-          {/* Footer */}
-          <div className="flex items-center justify-between mt-6 text-xs text-white/40">
-            <div className="flex items-center gap-2">
-              <div className="h-1.5 w-1.5 rounded-full bg-white/40 animate-pulse"></div>
-              <span>Secure Verification</span>
-            </div>
-          </div>
         </div>
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
-// Helper component for ticket details
 const DetailItem = ({ icon, label, value }) => (
-  <div className="flex flex-col">
-    <span className="text-xs text-white/40 mb-1 flex items-center gap-1">
-      {React.cloneElement(icon, { className: "h-3 w-3" })}
-      {label}
-    </span>
-    <span className="font-medium text-white">{value}</span>
+  <div className="flex items-start gap-2">
+    <div className="mt-0.5 text-indigo-400 flex-shrink-0">{icon}</div>
+    <div>
+      <p className="text-xs text-white/60">{label}</p>
+      <p className="font-medium text-white">{value}</p>
+    </div>
   </div>
-)
+);
 
-export default TicketForm
+export default TicketForm;
