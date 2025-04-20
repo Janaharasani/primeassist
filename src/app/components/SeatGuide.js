@@ -1,18 +1,30 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  FaDirections,
-  FaMapMarkerAlt,
-  FaCar,
-  FaWalking,
-  FaCheckCircle,
-  FaArrowRight,
-  FaHourglassHalf,
-  FaStopwatch,
-} from "react-icons/fa";
 import { getSeatInfo } from "../lib/mockStadium";
+import {
+  TicketValidationStep,
+  ParkingStep,
+  GateStep,
+  RouteStep,
+  WalkingStep,
+  ArrivalStep,
+  ProgressBar,
+  StepHeader,
+  NavigationButtons,
+} from "./StepComponents";
 
+/**
+ * SeatGuide Component - Guides users through the process of finding their stadium seat
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.ticketDetails - Details of the user's ticket
+ * @param {string} props.ticketDetails.zone - Seating zone/section identifier
+ * @param {string} props.ticketDetails.level - Level number in the stadium
+ * @param {string} props.ticketDetails.rowNumber - Row number of the seat
+ * @param {string} props.ticketDetails.columnNumber - Column/seat number
+ * @param {Function} props.onReset - Callback function to reset the process
+ */
 const SeatGuide = ({ ticketDetails, onReset }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -23,15 +35,18 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const intervalRef = useRef(null);
 
-  // Define the steps
-  const steps = [
-    { id: 0, name: "Validating Ticket", duration: 10 },
-    { id: 1, name: "Finding Optimal Parking", duration: 30 },
-    { id: 2, name: "Locating Nearest Gate", duration: 45 },
-    { id: 3, name: "Planning Route to Seat", duration: 60 },
-    { id: 4, name: "Walking to Seat", duration: 120 },
-    { id: 5, name: "Arrived at Seat", duration: 0 },
-  ];
+  // Define the steps with useMemo to prevent unnecessary re-creation
+  const steps = useMemo(
+    () => [
+      { id: 0, name: "Validating Ticket", duration: 10 },
+      { id: 1, name: "Finding Optimal Parking", duration: 30 },
+      { id: 2, name: "Locating Nearest Gate", duration: 45 },
+      { id: 3, name: "Planning Route to Seat", duration: 60 },
+      { id: 4, name: "Walking to Seat", duration: 120 },
+      { id: 5, name: "Arrived at Seat", duration: 0 },
+    ],
+    []
+  );
 
   // Effect to fetch seat info when the component mounts
   useEffect(() => {
@@ -59,7 +74,7 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
   useEffect(() => {
     const progressPercentage = (currentStep / (steps.length - 1)) * 100;
     setProgress(progressPercentage);
-  }, [currentStep]);
+  }, [currentStep, steps.length]);
 
   // Timer effect - start/stop the timer based on the current step
   useEffect(() => {
@@ -88,41 +103,85 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
       }, 1000);
     }
 
-    return () => clearInterval(intervalRef.current);
-  }, [currentStep]);
+    // Cleanup function to clear interval when component unmounts or dependencies change
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [currentStep, steps]);
 
-  // Format time for display
-  const formatTime = (seconds) => {
+  /**
+   * Format seconds into MM:SS display format
+   * @param {number} seconds - Time in seconds
+   * @returns {string} Formatted time string
+   */
+  const formatTime = useCallback((seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, "0")}:${secs
       .toString()
       .padStart(2, "0")}`;
-  };
+  }, []);
 
-  // Calculate remaining time for current step
-  const getRemainingTime = () => {
+  /**
+   * Calculate remaining time for current step
+   * @returns {string} Formatted remaining time
+   */
+  const getRemainingTime = useCallback(() => {
     if (currentStep >= steps.length - 1) return "00:00";
     return formatTime(steps[currentStep].duration - timer);
-  };
+  }, [currentStep, steps, timer, formatTime]);
 
-  // Handler to manually advance to the next step
-  const handleNextStep = () => {
+  /**
+   * Handler to manually advance to the next step
+   */
+  const handleNextStep = useCallback(() => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep((prevStep) => prevStep + 1);
     }
-  };
+  }, [currentStep, steps.length]);
 
-  // Handler to reset the guide
-  const handleReset = () => {
-    clearInterval(intervalRef.current);
+  /**
+   * Handler to reset the guide
+   */
+  const handleReset = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
     setIsTimerRunning(false);
     setCurrentStep(0);
     setProgress(0);
     setTimer(0);
     onReset();
-  };
+  }, [onReset]);
 
+  // Memoize the step content rendering logic
+  const renderStepContent = useCallback(() => {
+    switch (currentStep) {
+      case 0:
+        return <TicketValidationStep ticketDetails={ticketDetails} />;
+      case 1:
+        return <ParkingStep seatInfo={seatInfo} />;
+      case 2:
+        return <GateStep seatInfo={seatInfo} />;
+      case 3:
+        return <RouteStep seatInfo={seatInfo} ticketDetails={ticketDetails} />;
+      case 4:
+        return (
+          <WalkingStep
+            ticketDetails={ticketDetails}
+            duration={steps[currentStep].duration}
+          />
+        );
+      case 5:
+        return <ArrivalStep ticketDetails={ticketDetails} />;
+      default:
+        return null;
+    }
+  }, [currentStep, ticketDetails, seatInfo, steps]);
+
+  // Render loading state
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -131,6 +190,7 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
     );
   }
 
+  // Render error state
   if (error) {
     return (
       <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
@@ -164,22 +224,7 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
         </div>
 
         {/* Progress bar */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-white/60">Progress</span>
-            <span className="text-sm text-white/60">
-              {Math.round(progress)}%
-            </span>
-          </div>
-          <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5 }}
-              className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full"
-            />
-          </div>
-        </div>
+        <ProgressBar progress={progress} />
 
         {/* Step display */}
         <motion.div
@@ -189,236 +234,26 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
           transition={{ duration: 0.5 }}
           className="mb-6"
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              {currentStep === 0 && (
-                <FaDirections className="text-xl text-indigo-400" />
-              )}
-              {currentStep === 1 && (
-                <FaCar className="text-xl text-indigo-400" />
-              )}
-              {currentStep === 2 && (
-                <FaMapMarkerAlt className="text-xl text-indigo-400" />
-              )}
-              {currentStep === 3 && (
-                <FaDirections className="text-xl text-indigo-400" />
-              )}
-              {currentStep === 4 && (
-                <FaWalking className="text-xl text-indigo-400" />
-              )}
-              {currentStep === 5 && (
-                <FaCheckCircle className="text-xl text-green-400" />
-              )}
-              <h3 className="text-xl font-semibold text-white">
-                {steps[currentStep].name}
-              </h3>
-            </div>
-
-            {isTimerRunning && (
-              <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full">
-                <FaStopwatch className="text-indigo-300" />
-                <span className="text-white">{getRemainingTime()}</span>
-              </div>
-            )}
-          </div>
+          {/* Step header with icon and timer */}
+          <StepHeader
+            currentStep={currentStep}
+            stepName={steps[currentStep].name}
+            isTimerRunning={isTimerRunning}
+            remainingTime={getRemainingTime()}
+          />
 
           {/* Step content */}
           <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-            {currentStep === 0 && (
-              <div>
-                <p className="text-white/80">
-                  Your ticket for seat {ticketDetails?.zone}, Level{" "}
-                  {ticketDetails?.level}, Row {ticketDetails?.rowNumber}, Seat{" "}
-                  {ticketDetails?.columnNumber} is valid! Preparing your custom
-                  stadium guide...
-                </p>
-              </div>
-            )}
-
-            {currentStep === 1 && seatInfo && (
-              <div>
-                <p className="text-white/80 mb-2">
-                  Based on your seat location, we recommend:
-                </p>
-                <div className="bg-white/10 p-3 rounded-lg mb-2">
-                  <h4 className="font-medium text-indigo-300">
-                    Parking Zone{" "}
-                    {seatInfo.parkingZone
-                      ? Object.keys(seatInfo.parkingZone)[0]
-                      : "A"}
-                  </h4>
-                  <p className="text-white/70">
-                    {seatInfo.parkingZone
-                      ? seatInfo.parkingZone.description
-                      : "Closest to Main Entrance"}
-                  </p>
-                  <p className="text-white/60 text-sm mt-1">
-                    Available spots:{" "}
-                    {seatInfo.parkingZone
-                      ? seatInfo.parkingZone.availableSpots
-                      : 10}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {currentStep === 2 && seatInfo && (
-              <div>
-                <p className="text-white/80 mb-2">
-                  We&apos;ve found the optimal entrance gate for your seat:
-                </p>
-                <div className="bg-white/10 p-3 rounded-lg mb-2">
-                  <h4 className="font-medium text-indigo-300">
-                    {seatInfo.bestGate?.gate || "Gate 1"}
-                  </h4>
-                  <div className="flex items-center gap-4 mt-2">
-                    <div>
-                      <p className="text-xs text-white/60">Distance</p>
-                      <p className="text-white">
-                        {seatInfo.bestGate?.distance || 50}m
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-white/60">Crowd Level</p>
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <div
-                            key={i}
-                            className={`w-2 h-2 rounded-full ${
-                              i < (seatInfo.bestGate?.crowdLevel || 3)
-                                ? "bg-yellow-500"
-                                : "bg-white/20"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-xs text-white/60">Est. Time</p>
-                      <p className="text-white">
-                        {seatInfo.bestGate?.routeTime || 10} min
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentStep === 3 && seatInfo && (
-              <div>
-                <p className="text-white/80 mb-2">
-                  Recommended route to your seat:
-                </p>
-                <div className="bg-white/10 p-3 rounded-lg mb-2">
-                  <h4 className="font-medium text-indigo-300">
-                    {seatInfo.bestRoute?.route || "Route 1"}
-                  </h4>
-                  <p className="text-white/70">
-                    {seatInfo.bestRoute?.description || "Through the East Wing"}
-                  </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <div>
-                      <p className="text-xs text-white/60">Crowd Level</p>
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <div
-                            key={i}
-                            className={`w-2 h-2 rounded-full ${
-                              i < (seatInfo.bestRoute?.crowdLevel || 2)
-                                ? "bg-yellow-500"
-                                : "bg-white/20"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-xs text-white/60">Est. Time</p>
-                      <p className="text-white">
-                        {seatInfo.bestRoute?.time || 8} min
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentStep === 4 && (
-              <div>
-                <p className="text-white/80">
-                  You&apos;re almost there! Follow the signs to Section{" "}
-                  {ticketDetails?.zone}, Level {ticketDetails?.level}, Row{" "}
-                  {ticketDetails?.rowNumber}, Seat {ticketDetails?.columnNumber}
-                  .
-                </p>
-                <div className="flex items-center justify-center my-4">
-                  <div className="relative w-full max-w-xs h-8 bg-white/10 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ x: "-100%" }}
-                      animate={{ x: 0 }}
-                      transition={{
-                        duration: steps[currentStep].duration,
-                        ease: "linear",
-                      }}
-                      className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-600 to-purple-600"
-                      style={{ width: "100%" }}
-                    />
-                    <motion.div
-                      initial={{ x: 0 }}
-                      animate={{ x: "100%" }}
-                      transition={{
-                        duration: steps[currentStep].duration,
-                        ease: "linear",
-                      }}
-                      className="absolute top-0 left-0 h-full flex items-center justify-center"
-                    >
-                      <FaWalking className="text-white text-xl" />
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentStep === 5 && (
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <FaCheckCircle className="text-3xl text-green-500" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  You&apos;ve Arrived!
-                </h3>
-                <p className="text-white/80">
-                  You have successfully reached your seat in Section{" "}
-                  {ticketDetails?.zone}, Level {ticketDetails?.level}, Row{" "}
-                  {ticketDetails?.rowNumber}, Seat {ticketDetails?.columnNumber}
-                  . Enjoy the event!
-                </p>
-              </div>
-            )}
+            {renderStepContent()}
           </div>
         </motion.div>
 
         {/* Navigation buttons */}
-        <div className="flex justify-between">
-          <button
-            onClick={handleReset}
-            className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors duration-200"
-          >
-            Reset Guide
-          </button>
-
-          {currentStep < steps.length - 1 && (
-            <button
-              onClick={handleNextStep}
-              className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg text-white flex items-center gap-2 transition-colors duration-200"
-            >
-              <span>Next Step</span>
-              <FaArrowRight />
-            </button>
-          )}
-        </div>
+        <NavigationButtons
+          onReset={handleReset}
+          onNext={handleNextStep}
+          canProceed={currentStep < steps.length - 1}
+        />
       </div>
     </div>
   );
