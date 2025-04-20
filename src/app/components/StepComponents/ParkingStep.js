@@ -1,25 +1,71 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import { FaCar, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 
-const ParkingStep = ({ parkingDetails }) => {
+/**
+ * ParkingStep Component - Displays optimal parking location and information
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.seatInfo - Information about the user's seat and related details
+ */
+const ParkingStep = ({ seatInfo }) => {
+  // Get parking details from seatInfo
+  const parkingLot = seatInfo?.recommendedParking?.lot || "P3";
+  const parkingSection = seatInfo?.recommendedParking?.section || "Blue";
+  const distance = seatInfo?.recommendedParking?.distance || "250";
+  const walkTime = seatInfo?.recommendedParking?.walkTime || "5";
+
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <p className="text-white/80 mb-2">
-          Park your car in{" "}
-          <span className="font-semibold text-white">
-            Lot {parkingDetails?.lot}
-          </span>
-          . This is the closest parking area to your seat.
+      <p className="text-white/80 mb-2">
+        We&apos;ve found the optimal parking location for your seat:
+      </p>
+
+      <div className="bg-white/10 p-3 rounded-lg mb-2">
+        <h4 className="font-medium text-indigo-300 flex items-center">
+          <FaCar className="h-4 w-4 mr-2" />
+          Lot {parkingLot} - {parkingSection} Section
+        </h4>
+
+        <p className="text-white/70 my-2">
+          <span className="font-medium">How to get there:</span> Follow stadium
+          signs to Lot {parkingLot}. Once there, look for the {parkingSection}{" "}
+          Section markers. We&apos;ve reserved this area as it provides the
+          quickest access to your seating section.
         </p>
-        <p className="text-white/80">
-          Follow signs for{" "}
-          <span className="font-semibold text-white">
-            Section {parkingDetails?.section}
-          </span>
-          .
-        </p>
+
+        <div className="flex items-center gap-4 mt-2">
+          <div>
+            <p className="text-xs text-white/60">Distance to Gate</p>
+            <p className="text-white flex items-center">
+              <FaMapMarkerAlt className="h-3 w-3 mr-1" />
+              {distance}m
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-white/60">Availability</p>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-2 h-2 rounded-full ${
+                    i < (seatInfo?.recommendedParking?.availability || 3)
+                      ? "bg-green-500"
+                      : "bg-white/20"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-xs text-white/60">Walking Time</p>
+            <p className="text-white flex items-center">
+              <FaClock className="h-3 w-3 mr-1" />
+              {walkTime} min
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="mt-2 rounded-lg overflow-hidden h-[200px] relative">
@@ -33,6 +79,12 @@ const ParkingStep = ({ parkingDetails }) => {
           Parking Map
         </div>
       </div>
+
+      <p className="text-white/60 text-sm italic mt-1">
+        <span className="text-yellow-300">Tip:</span> Take a photo of your
+        parking location or use the &quot;Save My Spot&quot; feature in the app
+        to help find your car after the event.
+      </p>
     </div>
   );
 };
