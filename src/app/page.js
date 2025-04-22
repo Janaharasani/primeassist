@@ -19,13 +19,13 @@ export default function Home() {
       </div>
       <div>
       </div>
-      <div className="mt-12 h-[100vh] w-[100vw]">
+      {/* <div className="mt-12 h-[100vh] w-[100vw]">
         <Canvas>
           <Environment preset="studio" />
           <OrbitControls />
           <Stadium />
         </Canvas>
-      </div> 
+      </div>  */}
       </div>
    
   );
