@@ -7,6 +7,8 @@ import React from "react";
 import Stadium from "@/app/components/Stadium";
 import ClusteringEffect from "@/app/components/ClusteringEffect";
 import TicketForm from "@/app/components/TicketForm";
+import Crowd from "./components/Crowd";
+
 
 export default function Home() {  
   return (
@@ -26,6 +28,8 @@ export default function Home() {
           <Stadium />
         </Canvas>
       </div>  */}
+      <Crowd/>
+     
       </div>
    
   );
