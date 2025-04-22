@@ -161,7 +161,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                 letterSpacing: '0.5px'
               }}
             >
-              Smart Parking Solutions
+              One Day Match Companion
             </Typography>
           </Box>
         </Box>

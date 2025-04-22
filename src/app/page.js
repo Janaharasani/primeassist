@@ -4,10 +4,10 @@ import Image from "next/image";
 import { Environment, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React from "react";
-import Stadium from "@/app/components/Stadium";
+// import Stadium from "@/app/components/Stadium";
 import ClusteringEffect from "@/app/components/ClusteringEffect";
 import TicketForm from "@/app/components/TicketForm";
-import Crowd from "./components/Crowd";
+// import Crowd from "./components/Crowd";
 
 
 export default function Home() {  
@@ -28,7 +28,7 @@ export default function Home() {
           <Stadium />
         </Canvas>
       </div>  */}
-      <Crowd/>
+      {/* <Crowd/> */}
      
       </div>
    
