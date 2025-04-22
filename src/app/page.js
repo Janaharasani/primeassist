@@ -14,7 +14,7 @@ export default function Home() {
       <div className="h-[100vh] w-[100vw]">
         <ClusteringEffect />
       </div>
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-20">
+      <div className="absolute top-[250px] left-0 w-full h-full flex items-center justify-center z-20">
         <TicketForm />
       </div>
       <div>
