@@ -28,34 +28,34 @@ const getSeatInfo = (zone) => {
   
   if (!stadiumData) {
     // Fallback data if needed
-    return {
-      zone,
-      recommendedParking: {
-        lot: "P3",
-        section: "Blue",
-        distance: "250m",
-        walkTime: "5min",
+  return {
+    zone,
+    recommendedParking: {
+      lot: "P3",
+      section: "Blue",
+      distance: "250m",
+      walkTime: "5min",
         availableSpots: 10,
-        directions: [
-          { action: "Enter", detail: "Main entrance", icon: "→" },
-          { action: "Turn left", detail: "at first intersection", icon: "↰" },
-          { action: "Continue", detail: "200m to Lot P3", icon: "→" },
-          { action: "Park", detail: "Blue section", icon: "P" },
-        ],
-      },
-      bestGate: {
-        gate: "Gate B",
-        distance: "150m",
-        routeTime: "3min",
-        crowdLevel: 3,
-      },
-      bestRoute: {
-        route: "VIP Corridor",
-        description: "Through the VIP lounge area",
-        time: "5min",
-        crowdLevel: 2,
-      },
-      usedFallbackData: true,
+      directions: [
+        { action: "Enter", detail: "Main entrance", icon: "→" },
+        { action: "Turn left", detail: "at first intersection", icon: "↰" },
+        { action: "Continue", detail: "200m to Lot P3", icon: "→" },
+        { action: "Park", detail: "Blue section", icon: "P" },
+      ],
+    },
+    bestGate: {
+      gate: "Gate B",
+      distance: "150m",
+      routeTime: "3min",
+      crowdLevel: 3,
+    },
+    bestRoute: {
+      route: "VIP Corridor",
+      description: "Through the VIP lounge area",
+      time: "5min",
+      crowdLevel: 2,
+    },
+    usedFallbackData: true,
     };
   }
   
@@ -166,6 +166,23 @@ const VideoPlayer = ({ currentStep }) => {
     }
   }, [currentStep, currentVideo]);
 
+  // Special case for arrival step - show football.jpg instead of empty div
+  if (currentStep === 5) {
+    return (
+      <div className="mt-4 relative aspect-video bg-black rounded-xl overflow-hidden border border-white/10">
+        <Image
+          src="/football.jpg"
+          alt="Football stadium view"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 text-xs rounded">
+          Stadium View
+        </div>
+      </div>
+    );
+  }
+
   // If no video to show, render an empty div with the same height to maintain layout
   if (!currentVideo || !currentVideo.src) {
     return <div className="mt-4 relative aspect-video bg-black/30 rounded-xl border border-white/10"></div>;
@@ -211,7 +228,7 @@ const VideoPlayer = ({ currentStep }) => {
 };
 
 // Fake Stadium Map Component
-const FakeStadiumMap = ({ currentStep, seatInfo }) => {
+const FakeStadiumMap = ({ currentStep, seatInfo, duration }) => {
   // Only show the map for steps that need it
   if (!seatInfo) return null;
   
@@ -235,7 +252,7 @@ const FakeStadiumMap = ({ currentStep, seatInfo }) => {
         const selectedZone = typeof seatInfo.recommendedParking.section === 'object'
           ? seatInfo.recommendedParking.section.description?.charAt(0) || "Unknown"
           : seatInfo.recommendedParking.section;
-        
+
         return (
           <div className="p-4 h-full flex flex-col">
             <h3 className="text-lg font-bold text-white mb-4 flex items-center">
@@ -435,121 +452,50 @@ const FakeStadiumMap = ({ currentStep, seatInfo }) => {
       case 3: // Route step
         return (
           <div className="p-4 h-full flex flex-col">
-            <h3 className="text-lg font-bold text-white mb-4 flex items-center">
-              <FaRoute className="mr-2 text-indigo-400" /> Route Options
-            </h3>
-            <div className="flex-1 overflow-y-auto space-y-3">
-              {/* Plot routes from seatInfo */}
-              {seatInfo.routes && seatInfo.routes.map((route, index) => (
-                <div key={index} className={`p-3 rounded-lg border ${route.route === seatInfo.bestRoute.route ? 'bg-indigo-500/20 border-indigo-500/40' : 'bg-white/5 border-white/10'}`}>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-indigo-400/20 rounded-full flex items-center justify-center text-indigo-400">{index + 1}</div>
-                      <div>
-                        <p className="text-white font-medium">{route.route}</p>
-                        <p className="text-xs text-white/60">{route.description}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-white/60">Est. Time</p>
-                      <p className={`font-medium ${route.route === seatInfo.bestRoute.route ? 'text-indigo-400' : 'text-white'}`}>
-                        {route.time}
-                      </p>
-                    </div>
-                  </div>
-                  {route.route === seatInfo.bestRoute.route && (
-                    <div className="mt-2 bg-indigo-500/20 p-2 rounded text-sm text-white/90">
-                      <FaCheckCircle className="inline-block mr-2 text-indigo-400" /> Recommended route
-                    </div>
-                  )}
-                </div>
-              ))}
+            <div className="text-center text-white/70 mb-4">No route information available</div>
+            <div className="flex-1 relative overflow-hidden rounded-xl border border-white/10">
+              <Image 
+                src="/zones.jpg" 
+                alt="Stadium Zones Map" 
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
         );
       
       case 4: // Walking step
         return (
-          <div className="relative w-full h-full bg-gradient-to-br from-green-900/30 to-green-900/10 rounded-xl overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center">
-        <motion.div
-          animate={{
-                  scale: [1, 1.05, 1],
-          }}
-          transition={{
-                  duration: 2,
-            repeat: Infinity,
-          }}
-                className="w-2/3 h-2/3 border-2 border-dashed border-green-400/50 rounded-full flex items-center justify-center"
-        >
-          <motion.div
-            animate={{
-                    scale: [1, 1.1, 1],
-            }}
-            transition={{
-                    duration: 2.5,
-              repeat: Infinity,
-                    delay: 0.5,
-                  }}
-                  className="w-1/2 h-1/2 border-2 border-dashed border-green-400/70 rounded-full flex items-center justify-center"
-                >
-                  <div className="bg-green-400/20 p-3 rounded-full">
-                    <FaWalking className="text-green-400 text-4xl" />
-                  </div>
-                </motion.div>
-              </motion.div>
-            </div>
-            
-            {/* Moving dots representing people */}
+          <div className="relative w-full h-full bg-gradient-to-br from-green-900/30 to-green-900/10 rounded-xl overflow-hidden flex items-center justify-center">
             <motion.div
-              className="absolute w-3 h-3 bg-white/40 rounded-full"
-              initial={{ x: -10, y: "40%" }}
-              animate={{ x: "110%" }}
-              transition={{ duration: 8, repeat: Infinity, repeatType: "loop" }}
-            />
-            <motion.div
-              className="absolute w-2 h-2 bg-white/30 rounded-full"
-              initial={{ x: -10, y: "60%" }}
-              animate={{ x: "110%" }}
-              transition={{ duration: 12, repeat: Infinity, repeatType: "loop", delay: 2 }}
-            />
-            <motion.div
-              className="absolute w-3 h-3 bg-white/20 rounded-full"
-              initial={{ x: "110%", y: "30%" }}
-              animate={{ x: -10 }}
-              transition={{ duration: 10, repeat: Infinity, repeatType: "loop", delay: 1 }}
-            />
+              animate={{
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+              className="bg-green-500/20 p-5 rounded-full"
+            >
+              <FaWalking className="text-green-400 text-6xl" />
+            </motion.div>
           </div>
         );
         
-      case 5: // Arrival step
+      case 5: // Arrival step - Simplified to not duplicate content
         return (
-          <div className="relative w-full h-full bg-gradient-to-br from-yellow-900/30 to-yellow-900/10 rounded-xl overflow-hidden flex items-center justify-center">
+          <div className="relative w-full h-full bg-gradient-to-br from-green-900/30 to-green-900/10 rounded-xl overflow-hidden flex items-center justify-center">
             <motion.div
               animate={{
-                scale: [1, 1.2, 1],
-                rotate: [0, 10, 0, -10, 0],
+                scale: [1, 1.1, 1],
               }}
               transition={{
-                duration: 5,
+                duration: 2,
                 repeat: Infinity,
-                repeatType: "reverse",
               }}
-              className="relative"
+              className="bg-green-500/20 p-5 rounded-full"
             >
-              <FaChair className="text-yellow-400/60 text-9xl" />
-              <motion.div
-                animate={{
-                  opacity: [0, 1, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                <FaCheckCircle className="text-green-400 text-5xl" />
-        </motion.div>
+              <FaChair className="text-green-400 text-6xl" />
             </motion.div>
           </div>
         );
@@ -575,7 +521,7 @@ const FakeStadiumMap = ({ currentStep, seatInfo }) => {
   };
 
   return (
-    <div className="relative w-full h-[40vh] min-h-[300px] rounded-xl overflow-hidden bg-[#000F2B]/80 border border-white/10">
+    <div className="relative w-full h-full rounded-xl overflow-hidden bg-[#000F2B]/80 border border-white/10">
       {mapContent()}
     </div>
   );
@@ -646,16 +592,16 @@ const ParkingStep = ({ seatInfo }) => {
   const parkingData = seatInfo?.recommendedParking;
   if (!parkingData) return null;
 
-  // Make sure we're not rendering the parkingZone object directly
+  // Get zone label safely
   const zoneLabel = typeof parkingData.section === 'object' 
     ? parkingData.section.description || 'Unknown Zone'
     : parkingData.section;
 
   return (
-    <div className="flex flex-col gap-6 h-full p-4">
-      <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+    <div className="p-4 h-full overflow-y-auto">
+      <div className="bg-white/5 p-4 md:p-6 rounded-xl border border-white/10 mb-4">
         <div className="flex items-start gap-4">
-          <div className="bg-yellow-500/20 p-3 rounded-lg">
+          <div className="bg-yellow-500/20 p-3 rounded-lg flex-shrink-0">
             <FaCar className="text-yellow-400 text-2xl" />
           </div>
           <div>
@@ -665,7 +611,7 @@ const ParkingStep = ({ seatInfo }) => {
             <p className="text-white/80 text-lg">
               Zone {zoneLabel} - {parkingData.lot}
             </p>
-            <div className="flex gap-6 mt-4">
+            <div className="flex flex-wrap gap-4 mt-4">
               <div className="flex items-center gap-2">
                 <FaMapMarkerAlt className="text-yellow-400" />
                 <div>
@@ -700,7 +646,7 @@ const ParkingStep = ({ seatInfo }) => {
         </div>
       </div>
 
-      <div className="flex-1 bg-white/5 p-6 rounded-xl border border-white/10 overflow-y-auto">
+      <div className="bg-white/5 p-4 md:p-6 rounded-xl border border-white/10">
         <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-3">
           <FaWalking className="text-yellow-400" />
           Turn-by-Turn Directions
@@ -715,7 +661,7 @@ const ParkingStep = ({ seatInfo }) => {
               transition={{ delay: index * 0.2 }}
               className="flex items-start gap-4 p-4 bg-white/10 rounded-lg border border-white/10"
             >
-              <div className="bg-yellow-500/20 text-yellow-400 w-10 h-10 rounded-full flex items-center justify-center text-lg">
+              <div className="bg-yellow-500/20 text-yellow-400 w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink0">
                 {step.icon === "P" ? <FaParking /> : 
                  step.icon === "→" ? <FaArrowRight /> : 
                  step.icon === "↰" ? <FaArrowRight className="transform -rotate-90" /> : 
@@ -742,7 +688,7 @@ const ParkingStep = ({ seatInfo }) => {
         
         <div className="mt-6 p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
           <p className="text-white text-sm flex items-start gap-2">
-            <FaExclamationTriangle className="text-yellow-400 flex-shrink-0 mt-0.5" />
+            <FaExclamationTriangle className="text-yellow-400 flex-shrink0 mt-0.5" />
             <span>
               <strong className="text-yellow-400">Parking Tip:</strong> Arrive at least 60 minutes before event start time to secure your spot. 
               Zone {zoneLabel} typically fills up {zoneLabel === 'A' ? 'very quickly' : zoneLabel === 'B' ? 'moderately quickly' : 'slowly'}.
@@ -854,22 +800,30 @@ const RouteStep = ({ seatInfo, ticketDetails }) => {
   const routeData = seatInfo?.bestRoute;
   
   if (!routeData) return (
-    <div className="p-4 text-center text-white/70">
-      No route information available
+    <div className="p-4 h-full flex flex-col">
+      <div className="text-center text-white/70 mb-4">No route information available</div>
+      <div className="flex-1 relative overflow-hidden rounded-xl border border-white/10">
+        <Image 
+          src="/zones.jpg" 
+          alt="Stadium Zones Map" 
+          fill
+          className="object-cover"
+        />
+      </div>
     </div>
   );
 
   return (
-    <div className="flex flex-col gap-6 h-full p-4">
-      <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+    <div className="p-4 h-full overflow-y-auto">
+      <div className="bg-white/5 p-4 md:p-6 rounded-xl border border-white/10 mb-4">
         <div className="flex items-start gap-4">
-          <div className="bg-indigo-500/20 p-3 rounded-lg">
+          <div className="bg-indigo-500/20 p-3 rounded-lg flex-shrink-0">
             <FaRoute className="text-indigo-400 text-2xl" />
           </div>
           <div>
             <h3 className="text-xl font-bold text-white">Optimal Route</h3>
             <p className="text-white/80 text-lg">{routeData.route || "Best Route"}</p>
-            <div className="flex gap-6 mt-4">
+            <div className="flex flex-wrap gap-4 mt-4">
               <div className="flex items-center gap-2">
                 <FaClock className="text-indigo-400" />
                 <div>
@@ -898,7 +852,7 @@ const RouteStep = ({ seatInfo, ticketDetails }) => {
         </div>
       </div>
 
-      <div className="flex-1 bg-white/5 p-6 rounded-xl border border-white/10 overflow-y-auto">
+      <div className="bg-white/5 p-4 md:p-6 rounded-xl border border-white/10">
         <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-3">
           <FaArrowRight className="text-indigo-400" />
           Route Options
@@ -926,8 +880,8 @@ const RouteStep = ({ seatInfo, ticketDetails }) => {
                       {route.route === routeData.route && (
                         <span className="ml-2 text-xs bg-indigo-500/40 text-white px-2 py-0.5 rounded">Recommended</span>
                       )}
-                    </p>
-                  </div>
+            </p>
+          </div>
                   <div className="text-white/60 text-sm">
                     {route.time}
                   </div>
@@ -951,23 +905,23 @@ const RouteStep = ({ seatInfo, ticketDetails }) => {
               </div>
             ))
           ) : (
-            <div className="p-4 bg-white/10 rounded-lg border border-white/10">
-              <p className="text-white">
-                Follow the{" "}
+          <div className="p-4 bg-white/10 rounded-lg border border-white/10">
+            <p className="text-white">
+              Follow the{" "}
                 {routeData.description?.includes("VIP") ? (
-                  <span className="text-indigo-400">
-                    VIP corridor with the red carpet
-                  </span>
+                <span className="text-indigo-400">
+                  VIP corridor with the red carpet
+                </span>
                 ) : routeData.description?.includes("Main") ? (
-                  <span className="text-indigo-400">
-                    main concourse with food vendors
-                  </span>
-                ) : (
-                  <span className="text-indigo-400">marked pathway</span>
-                )}{" "}
-                to reach your section.
-              </p>
-            </div>
+                <span className="text-indigo-400">
+                  main concourse with food vendors
+                </span>
+              ) : (
+                <span className="text-indigo-400">marked pathway</span>
+              )}{" "}
+              to reach your section.
+            </p>
+          </div>
           )}
 
           <div className="p-4 bg-indigo-500/10 rounded-lg border border-indigo-500/20">
@@ -986,10 +940,10 @@ const RouteStep = ({ seatInfo, ticketDetails }) => {
 // Walking Step
 const WalkingStep = ({ ticketDetails, duration }) => {
   return (
-    <div className="flex flex-col gap-6 h-full">
-      <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+    <div className="p-4 h-full overflow-y-auto">
+      <div className="bg-white/5 p-4 md:p-6 rounded-xl border border-white/10 mb-4">
         <div className="flex items-start gap-4">
-          <div className="bg-green-500/20 p-3 rounded-lg">
+          <div className="bg-green-500/20 p-3 rounded-lg flex-shrink-0">
             <FaWalking className="text-green-400 text-2xl" />
           </div>
           <div>
@@ -1001,7 +955,7 @@ const WalkingStep = ({ ticketDetails, duration }) => {
         </div>
       </div>
 
-      <div className="flex-1 bg-white/5 p-6 rounded-xl border border-white/10 overflow-y-auto">
+      <div className="bg-white/5 p-4 md:p-6 rounded-xl border border-white/10">
         <div className="mb-4 bg-black/20 rounded-lg overflow-hidden border border-white/10 relative aspect-video">
           {/* Virtual stadium seating chart */}
           <div className="absolute inset-0 bg-[#011D3C] flex items-center justify-center">
@@ -1047,7 +1001,7 @@ const WalkingStep = ({ ticketDetails, duration }) => {
           </div>
         </div>
 
-        <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-3">
+        <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-3 mt-4">
           <FaArrowRight className="text-green-400" />
           Seat Location Details
         </h4>
@@ -1125,72 +1079,6 @@ const WalkingStep = ({ ticketDetails, duration }) => {
   );
 };
 
-// Arrival Step
-const ArrivalStep = ({ ticketDetails }) => {
-  return (
-    <div className="flex flex-col gap-6 h-full items-center justify-center text-center">
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 200 }}
-        className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center"
-      >
-        <FaCheckCircle className="text-green-500 text-4xl" />
-      </motion.div>
-
-      <div>
-        <h3 className="text-2xl font-bold text-white mb-2">
-          You&apos;ve Arrived!
-        </h3>
-        <p className="text-white/80 text-lg">
-          Welcome to your seat in Section {ticketDetails?.zone}
-        </p>
-      </div>
-
-      <div className="bg-white/5 p-6 rounded-xl border border-white/10 w-full max-w-md">
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="bg-white/10 p-3 rounded-lg">
-            <p className="text-white/60 text-sm">Level</p>
-            <p className="text-white font-bold text-xl">
-              {ticketDetails?.level}
-            </p>
-          </div>
-          <div className="bg-white/10 p-3 rounded-lg">
-            <p className="text-white/60 text-sm">Row</p>
-            <p className="text-white font-bold text-xl">
-              {ticketDetails?.rowNumber}
-            </p>
-          </div>
-          <div className="bg-white/10 p-3 rounded-lg">
-            <p className="text-white/60 text-sm">Seat</p>
-            <p className="text-white font-bold text-xl">
-              {ticketDetails?.columnNumber}
-            </p>
-          </div>
-          <div className="bg-white/10 p-3 rounded-lg">
-            <p className="text-white/60 text-sm">Section</p>
-            <p className="text-white font-bold text-xl">
-              {ticketDetails?.zone}
-            </p>
-          </div>
-        </div>
-
-        <div className="relative aspect-[4/3] bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
-          <FaChair className="text-white/20 text-6xl" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-white/70 text-sm">Seat View</p>
-          </div>
-        </div>
-      </div>
-
-      <p className="text-white/70 text-sm max-w-md">
-        <span className="text-yellow-300">Enjoy the event!</span> Ushers are
-        available if you need assistance.
-      </p>
-    </div>
-  );
-};
-
 // Progress Bar Component
 const ProgressBar = ({ progress }) => {
   return (
@@ -1247,15 +1135,16 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
   const [loading, setLoading] = useState(true);
   const [timer, setTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [duration, setDuration] = useState(0);
   const intervalRef = useRef(null);
 
   const steps = useMemo(
     () => [
       { id: 0, name: "Validating Ticket", duration: 5 },
-      { id: 1, name: "Finding Optimal Parking", duration: 15 },
-      { id: 2, name: "Locating Nearest Gate", duration: 10 },
-      { id: 3, name: "Planning Route to Seat", duration: 20 },
-      { id: 4, name: "Walking to Seat", duration: 25 },
+      { id: 1, name: "Finding Optimal Parking", duration: 150 },
+      { id: 2, name: "Locating Nearest Gate", duration: 150 },
+      { id: 3, name: "Planning Route to Seat", duration: 150 },
+      { id: 4, name: "Walking to Seat", duration: 150 },
       { id: 5, name: "Arrived at Seat", duration: 0 },
     ],
     []
@@ -1267,6 +1156,7 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
       const result = getSeatInfo(ticketDetails.zone);
       setSeatInfo(result);
       setLoading(false);
+      setDuration(result.bestRoute?.time || 5);
     }
   }, [ticketDetails]);
 
@@ -1343,11 +1233,11 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
         return (
           <WalkingStep
             ticketDetails={ticketDetails}
-            duration={steps[currentStep].duration}
+            duration={duration}
           />
         );
       case 5:
-        return <ArrivalStep ticketDetails={ticketDetails} />;
+        return <ArrivalStep seatInfo={seatInfo} />;
       default:
         return null;
     }
@@ -1362,11 +1252,11 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#000F2B] py-16 px-4 md:px-8 overflow-auto">
-      <div className="max-w-6xl mx-auto bg-[#000F2B]/50 backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
-        <div className="p-6 md:p-8 flex flex-col">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-white">
+    <div className="min-h-screen bg-[#000F2B] py-6 px-4 md:py-8 md:px-8 overflow-auto">
+      <div className="max-w-6xl mx-auto bg-[#000F2B]/50 backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl overflow-hidden mb-8">
+        <div className="p-4 md:p-6 flex flex-col">
+          <div className="mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-white">
               Stadium Navigation Guide
             </h2>
             <p className="text-white/70">Follow the steps to reach your seat</p>
@@ -1381,15 +1271,17 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
             )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
             {/* Visual Guide Column */}
-            <div className="flex flex-col">
-              <FakeStadiumMap currentStep={currentStep} seatInfo={seatInfo} />
+            <div className="flex flex-col gap-4">
+              <div className="h-[30vh] md:h-[35vh] min-h-[250px] max-h-[400px]">
+                <FakeStadiumMap currentStep={currentStep} seatInfo={seatInfo} duration={duration} />
+              </div>
               <VideoPlayer currentStep={currentStep} />
             </div>
 
             {/* Information Column */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-4">
               <ProgressBar progress={progress} />
 
               <motion.div
@@ -1403,7 +1295,7 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
                   remainingTime={getRemainingTime()}
                 />
 
-                <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden min-h-[300px]">
+                <div className="bg-white/5 rounded-xl border border-white/10 overflow-y-auto max-h-[60vh] md:max-h-[50vh]">
                   {renderStepContent()}
                 </div>
               </motion.div>
@@ -1416,6 +1308,79 @@ const SeatGuide = ({ ticketDetails, onReset }) => {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Arrival Step
+const ArrivalStep = ({ seatInfo }) => {
+  return (
+    <div className="p-4 h-full overflow-y-auto">
+      <div className="flex flex-col gap-6 items-center justify-center text-center">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 200 }}
+          className="w-24 h-24 rounded-full bg-green-500/20 flex items-center justify-center"
+        >
+          <FaCheckCircle className="text-green-500 text-4xl" />
+        </motion.div>
+
+        <div>
+          <h3 className="text-2xl font-bold text-white mb-2">
+            You&apos;ve Arrived!
+          </h3>
+          <p className="text-white/80 text-lg">
+            Welcome to your seat in Section {seatInfo?.zone}
+          </p>
+        </div>
+
+        <div className="bg-white/5 p-6 rounded-xl border border-white/10 w-full max-w-md">
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="bg-white/10 p-3 rounded-lg">
+              <p className="text-white/60 text-sm">Level</p>
+              <p className="text-white font-bold text-xl">
+                {seatInfo?.level}
+              </p>
+            </div>
+            <div className="bg-white/10 p-3 rounded-lg">
+              <p className="text-white/60 text-sm">Row</p>
+              <p className="text-white font-bold text-xl">
+                {seatInfo?.rowNumber}
+              </p>
+            </div>
+            <div className="bg-white/10 p-3 rounded-lg">
+              <p className="text-white/60 text-sm">Seat</p>
+              <p className="text-white font-bold text-xl">
+                {seatInfo?.columnNumber}
+              </p>
+            </div>
+            <div className="bg-white/10 p-3 rounded-lg">
+              <p className="text-white/60 text-sm">Section</p>
+              <p className="text-white font-bold text-xl">
+                {seatInfo?.zone}
+              </p>
+            </div>
+          </div>
+
+          <div className="relative aspect-[4/3] bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
+            <Image 
+              src="/football.jpg" 
+              alt="Stadium view from seat"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+              <p className="text-white/90 font-medium text-sm">Your Seat View</p>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-white/70 text-sm max-w-md">
+          <span className="text-yellow-300">Enjoy the event!</span> Ushers are
+          available if you need assistance.
+        </p>
       </div>
     </div>
   );

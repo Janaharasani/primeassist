@@ -142,7 +142,7 @@ const TicketForm = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#000F2B] p-4 md:p-8 flex items-center justify-center">
+    <div className="min-h-screen bg-[#000F2B]/40 p-4 md:p-8 flex items-center justify-center">
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Video and AI Monitoring Section */}
         <div className="flex flex-col gap-6">
@@ -224,7 +224,7 @@ const TicketForm = () => {
                 />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">PrimeAssista</h2>
+                <h2 className="text-2xl font-bold text-white">PrimeAssist</h2>
                 <p className="text-xs text-white/60">
                   Your Match Day Companion
                 </p>
