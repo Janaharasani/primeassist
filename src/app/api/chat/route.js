@@ -1,11 +1,11 @@
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: "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", // Replace with your API key
+  baseURL: process.env.OPENROUTER_BASE_URL,
+  apiKey: process.env.OPENROUTER_API_KEY,
   defaultHeaders: {
-    "HTTP-Referer": "https://parking-app-smoky.vercel.app/",
-    "X-Title":"parking-app",
+    "HTTP-Referer": process.env.OPENROUTER_REFERER,
+    "X-Title": process.env.OPENROUTER_TITLE,
   },
 });
 
