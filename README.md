@@ -1,4 +1,3 @@
-Here's the merged README file combining both documents into one cohesive document for your Prime Assist application:
 
 # 🚗 Prime Assist - Smart Stadium Parking & Navigation Solution
 
