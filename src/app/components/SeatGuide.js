@@ -452,13 +452,12 @@ const FakeStadiumMap = ({ currentStep, seatInfo, duration }) => {
       case 3: // Route step
         return (
           <div className="p-4 h-full flex flex-col">
-            <div className="text-center text-white/70 mb-4">No route information available</div>
             <div className="flex-1 relative overflow-hidden rounded-xl border border-white/10">
               <Image 
                 src="/zones.jpg" 
                 alt="Stadium Zones Map" 
                 fill
-                className="object-cover"
+                className="object-cover "
               />
             </div>
           </div>
