@@ -28,6 +28,14 @@ const TicketForm = () => {
   const [showSeatGuide, setShowSeatGuide] = useState(false);
   const videoRef = useRef(null);
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "https://primeassistsa.nexetron.com/home/";
+    }
+  };
+
   // Play video when component mounts
   useEffect(() => {
     if (videoRef.current) {
@@ -239,7 +247,7 @@ const TicketForm = () => {
           <div className="px-6 pb-6">
             <form onSubmit={handleSubmit} className="mt-4">
               <div className="mb-6">
-                <label className="block text-lg font-medium text-white/90 mb-3">
+                <label className="block my-10 text-lg font-medium text-white/90 mb-3">
                   Enter Your Ticket Number
                 </label>
                 <div className="relative group">
@@ -252,7 +260,7 @@ const TicketForm = () => {
                     suppressHydrationWarning
                   />
                 </div>
-                <p className="mt-2 text-sm text-white/40">
+                <p className="my-5 text-sm text-white/40">
                   Format: Zone-EventType-Venue-Date-Gate-Section-Level-Row-Seat
                 </p>
               </div>
@@ -262,7 +270,7 @@ const TicketForm = () => {
                 disabled={isValidating || !ticketNumber}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-medium transition-all duration-200
+                className={`w-full my-16 flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-medium transition-all duration-200
                   ${
                     isValidating || !ticketNumber
                       ? "bg-white/10 cursor-not-allowed text-white/60"
@@ -278,6 +286,18 @@ const TicketForm = () => {
                   <span>Verify Ticket</span>
                 )}
               </motion.button>
+
+              <motion.button
+                type="button"
+                onClick={handleBack}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full my-16 flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-medium transition-all duration-200 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
+              >
+                ← Back to Home
+              </motion.button>
+
+               
             </form>
 
             {validationResult && (

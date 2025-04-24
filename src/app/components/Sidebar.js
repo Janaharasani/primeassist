@@ -151,7 +151,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                 letterSpacing: '0.5px'
               }}
             >
-              Prime Asset
+              PrimeAssist
             </Typography>
             <Typography 
               variant="caption" 
