@@ -226,13 +226,13 @@ const TicketForm = () => {
               <div>
                 <h2 className="text-2xl font-bold text-white">PrimeAssist</h2>
                 <p className="text-xs text-white/60">
-                  Your Match Day Companion
+                  Your Match Day Companion.
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2 text-white/60 mt-2">
               <FaTicketAlt className="h-4 w-4" />
-              <span>Making Your Football Experience Seamless</span>
+              <span>Making Your Football Experience Seamless.</span>
             </div>
           </div>
 
